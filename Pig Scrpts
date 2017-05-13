@@ -1,0 +1,27 @@
+Loading data, save and dump using pig.
+
+data = LOAD '/user/praveenbigdata19/pigdemo/data-bag.txt' using PigStorage(',');
+DUMP data;
+STORE data INTO '/user/praveenbigdata19/pigdemo/bigdata_store' USING PigStorage('|');
+
+
+
+Test data:
+hdfs dfs -cat /user/praveenbigdata19/pigdemo/data-bag.txt
+1,2,3
+1,2,3
+1,2,4
+2,3,4
+3,4,5
+4,5,6
+4,5,6
+
+
+hdfs  dfs -cat /user/praveenbigdata19/pigdemo/bigdata_store/part*
+1|2|3
+1|2|3
+1|2|4
+2|3|4
+3|4|5
+4|5|6
+4|5|6
