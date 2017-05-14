@@ -25,3 +25,67 @@ hdfs  dfs -cat /user/praveenbigdata19/pigdemo/bigdata_store/part*
 3|4|5
 4|5|6
 4|5|6
+================================================================================================
+
+Testing Multiple delimiters
+
+data = data = LOAD '/user/praveenbigdata19/pigdemo/multi-delimiters.txt' using PigStorage('\t') AS (f1,f2);
+
+f1f2bag = FOREACH data generate f1, STRSPLIT(f2,',');
+dump f1f2bag;
+
+input:
+key1    value11,value12,value13
+key2    value21,value22,value23
+key3    value31,value32,value33
+key4    value41,value42,value43
+
+output:
+(key1,(value11,value12,value13))
+(key2,(value21,value22,value23))
+(key3,(value31,value32,value33))
+(key4,(value41,value42,value43))
+==================================================================================================
+
+Explain the bag data structure
+
+data = LOAD '/user/praveenbigdata19/pigdemo/data-bag.txt' using PigStorage(',') as (f1:int,f2:int,f3:int);
+databag = group data by f1;
+dump databag;
+STORE databag INTO '/user/praveenigdata19/pigdemo/InnerBag''
+
+
+input:
+cat data-bag.txt 
+1,2,3
+1,2,3
+1,2,4
+2,3,4
+3,4,5
+4,5,6
+4,5,6
+
+output:
+(1,{(1,2,4),(1,2,3),(1,2,3)})
+(2,{(2,3,4)})
+(3,{(3,4,5)})
+(4,{(4,5,6),(4,5,6)})
+===================================================================================================
+
+Explains how to lookup to a particular column in a relation
+
+
+data = LOAD '/user/praveenbigdata19/pigdemo/nested-schema.txt' AS (f1:int,f2:bag{t:(t1:int,t2:int)},f3:map[]);
+by_pos = FOREACH data GENERATE $0;
+dump by_pos
+by_field = FOREACH data GENERATE f2.t1;
+dump by_field;
+by_field1 = FOREACH data GENERATE f2;
+dump by_field1
+describe data
+by_map_name = FOREACH data GENERATE f3#'name';
+dump by_map_name
+by_map_age = FOREACH data GENERATE f3#'age';
+dump by_map_age;
+
+
